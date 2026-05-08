@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MENU-001</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Pretendard', sans-serif;
+        }
+
+        body {
+            background: #f3f4f6;
+            padding: 20px;
+        }
+
+        .wrapper {
+            background: white;
+            border: 1px solid #dcdfe6;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .page-title {
+            padding: 18px 24px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 28px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .page-title span {
+            font-size: 14px;
+            background: #e8f0ff;
+            color: #2563eb;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        .content {
+            display: flex;
+            min-height: 700px;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: linear-gradient(180deg, #111827 0%, #0f172a 100%);
+            color: white;
+            padding: 20px 0;
+        }
+
+        .sidebar-title {
+            font-size: 24px;
+            font-weight: 700;
+            padding: 0 24px 20px;
+        }
+
+        .menu {
+            list-style: none;
+        }
+
+        .menu li {
+            padding: 16px 24px;
+            cursor: pointer;
+            color: #cbd5e1;
+            border-left: 4px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .menu li:hover {
+            background: rgba(255,255,255,0.06);
+        }
+
+        .menu li.active {
+            background: rgba(37,99,235,0.2);
+            border-left: 4px solid #3b82f6;
+            color: white;
+            font-weight: 600;
+        }
+
+        .main {
+            flex: 1;
+            background: #f8fafc;
+            padding: 24px;
+        }
+
+        .breadcrumb {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .search-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-row label {
+            font-size: 14px;
+            color: #374151;
+            font-weight: 600;
+        }
+
+        .input,
+        .select {
+            height: 40px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 0 12px;
+            background: white;
+        }
+
+        .input {
+            width: 180px;
+        }
+
+        .select {
+            width: 120px;
+        }
+
+        .btn {
+            height: 40px;
+            padding: 0 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-search {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-reset {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-add {
+            background: #2563eb;
+            color: white;
+            margin-left: auto;
+        }
+
+        .table-wrapper {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table thead {
+            background: #f8fafc;
+        }
+
+        .table th {
+            padding: 14px;
+            font-size: 14px;
+            color: #374151;
+            border-bottom: 1px solid #e5e7eb;
+            border-right: 1px solid #eef2f7;
+        }
+
+        .table td {
+            padding: 14px;
+            text-align: center;
+            border-bottom: 1px solid #eef2f7;
+            border-right: 1px solid #eef2f7;
+            color: #4b5563;
+            font-size: 14px;
+        }
+
+        .table tr:hover {
+            background: #f9fafb;
+        }
+
+        .status {
+            color: #16a34a;
+            font-weight: 600;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 20px;
+        }
+
+        .page-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            background: white;
+            cursor: pointer;
+        }
+
+        .page-btn.active {
+            background: #2563eb;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+
+    <div class="page-title">
+        메뉴목록
+        <span>MENU-001</span>
+    </div>
+
+    <div class="content">
+
+        <div class="sidebar">
+            <div class="sidebar-title">메뉴관리</div>
+
+            <ul class="menu">
+                <li onclick="location.href='menu-001.html'"  class="active" >메뉴목록</li>
+                <li onclick="location.href='menu-002.html'">ROLE 메뉴권한</li>
+                <li onclick="location.href='menu-003.html'" >버튼권한관리</li>
+                <li onclick="location.href='menu-005.html'" >요금제 메뉴정책</li>
+                <li onclick="location.href='menu-006.html'">업체별 메뉴정책</li>
+            </ul>
+        </div>
+
+        <div class="main">
+
+            <div class="breadcrumb">
+                메뉴관리 > 메뉴목록
+            </div>
+
+            <div class="search-box">
+                <div class="search-row">
+
+                    <label>메뉴명</label>
+                    <input class="input" type="text" />
+
+                    <label>메뉴코드</label>
+                    <input class="input" type="text" />
+
+                    <label>사용여부</label>
+                    <select class="select">
+                        <option>전체</option>
+                        <option>Y</option>
+                        <option>N</option>
+                    </select>
+
+                    <button class="btn btn-search">검색</button>
+                    <button class="btn btn-reset">초기화</button>
+
+                    <button class="btn btn-add">+ 신규등록</button>
+
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>메뉴코드</th>
+                        <th>메뉴명</th>
+                        <th>상위메뉴</th>
+                        <th>URL</th>
+                        <th>정렬순서</th>
+                        <th>사용여부</th>
+                        <th>상태</th>
+                        <th>수정</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>MENU-000</td>
+                        <td>대시보드</td>
+                        <td>-</td>
+                        <td>/dashboard</td>
+                        <td>1</td>
+                        <td>Y</td>
+                        <td class="status">사용</td>
+                        <td>✎</td>
+                    </tr>
+
+                    <tr>
+                        <td>2</td>
+                        <td>MENU-001</td>
+                        <td>순위체크</td>
+                        <td>-</td>
+                        <td>/rank</td>
+                        <td>2</td>
+                        <td>Y</td>
+                        <td class="status">사용</td>
+                        <td>✎</td>
+                    </tr>
+
+                    <tr>
+                        <td>3</td>
+                        <td>MENU-001-01</td>
+                        <td>전체 순위</td>
+                        <td>순위체크</td>
+                        <td>/rank/total</td>
+                        <td>1</td>
+                        <td>Y</td>
+                        <td class="status">사용</td>
+                        <td>✎</td>
+                    </tr>
+
+                    <tr>
+                        <td>4</td>
+                        <td>MENU-001-02</td>
+                        <td>실시간 순위</td>
+                        <td>순위체크</td>
+                        <td>/rank/realtime</td>
+                        <td>2</td>
+                        <td>Y</td>
+                        <td class="status">사용</td>
+                        <td>✎</td>
+                    </tr>
+
+                    <tr>
+                        <td>5</td>
+                        <td>MENU-002</td>
+                        <td>영업관리</td>
+                        <td>-</td>
+                        <td>/sales</td>
+                        <td>3</td>
+                        <td>Y</td>
+                        <td class="status">사용</td>
+                        <td>✎</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div class="pagination">
+                    <button class="page-btn">〈</button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn">3</button>
+                    <button class="page-btn">4</button>
+                    <button class="page-btn">5</button>
+                    <button class="page-btn">〉</button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
