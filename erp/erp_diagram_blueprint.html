@@ -1,0 +1,998 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ERP ER Diagram - Premium Web Style</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --panel: #ffffff;
+      --line: #d7e8f7;
+      --line-strong: #9dc9ec;
+      --text: #17324d;
+      --muted: #6b8298;
+      --blue-50: #f3faff;
+      --blue-100: #e6f4ff;
+      --blue-200: #c6e6ff;
+      --blue-300: #8fd0ff;
+      --blue-500: #2598e8;
+      --blue-600: #1173bd;
+      --green: #24a148;
+      --orange: #f59e0b;
+      --red: #ef4444;
+      --shadow: 0 22px 50px rgba(23, 50, 77, .14);
+      --shadow-soft: 0 10px 30px rgba(23, 50, 77, .08);
+      --radius: 18px;
+      --toolbar-h: 70px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      color: var(--text);
+      font-family: Inter, Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(143, 208, 255, .20), transparent 28%),
+        radial-gradient(circle at 84% 18%, rgba(37, 152, 232, .10), transparent 34%),
+        #fff;
+    }
+
+    .app {
+      height: 100vh;
+      display: grid;
+      grid-template-rows: var(--toolbar-h) 1fr;
+    }
+
+    .topbar {
+      position: relative;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 0 22px;
+      background: rgba(255,255,255,.86);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(157, 201, 236, .45);
+      box-shadow: 0 12px 30px rgba(23, 50, 77, .06);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 310px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      color: white;
+      background: linear-gradient(145deg, #19a8ff, #0f64ad);
+      box-shadow: 0 10px 24px rgba(17, 115, 189, .25);
+      font-weight: 900;
+      letter-spacing: -.04em;
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 850;
+      letter-spacing: -.03em;
+      line-height: 1.1;
+    }
+
+    .brand-subtitle {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .toolbar-center {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      min-width: 310px;
+    }
+
+    .btn {
+      border: 1px solid rgba(157, 201, 236, .72);
+      background: linear-gradient(180deg, #fff, #f4faff);
+      color: #194362;
+      height: 36px;
+      padding: 0 13px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 12px;
+      cursor: pointer;
+      box-shadow: 0 7px 18px rgba(23, 50, 77, .06);
+      transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: var(--blue-300);
+      box-shadow: 0 12px 24px rgba(17, 115, 189, .14);
+    }
+
+    .btn.primary {
+      color: white;
+      border-color: #0d7ccc;
+      background: linear-gradient(145deg, #24a9ff, #0e6eb8);
+    }
+
+    .zoom-pill {
+      height: 36px;
+      min-width: 64px;
+      padding: 0 11px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blue-600);
+      border: 1px solid rgba(157, 201, 236, .72);
+      border-radius: 12px;
+      background: #fff;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .main {
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+    }
+
+    .sidebar {
+      position: relative;
+      z-index: 12;
+      height: calc(100vh - var(--toolbar-h));
+      padding: 18px;
+      background: rgba(255,255,255,.75);
+      border-right: 1px solid rgba(157, 201, 236, .35);
+      backdrop-filter: blur(16px);
+      overflow: auto;
+    }
+
+    .side-card {
+      background: rgba(255,255,255,.90);
+      border: 1px solid rgba(157, 201, 236, .48);
+      border-radius: 18px;
+      box-shadow: var(--shadow-soft);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .side-title {
+      margin: 0 0 12px;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: -.02em;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .metric {
+      padding: 12px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #f7fcff, #edf7ff);
+      border: 1px solid rgba(198, 230, 255, .85);
+    }
+
+    .metric-value {
+      font-size: 22px;
+      font-weight: 950;
+      letter-spacing: -.05em;
+      color: var(--blue-600);
+    }
+
+    .metric-label {
+      margin-top: 2px;
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 750;
+    }
+
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 0;
+      color: #35546c;
+      font-size: 12px;
+      font-weight: 750;
+      border-bottom: 1px dashed rgba(157, 201, 236, .55);
+    }
+
+    .legend-row:last-child { border-bottom: 0; }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 4px;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.06);
+    }
+
+    .dot-pk { background: #37b2ff; }
+    .dot-fk { background: #f5b73d; }
+    .dot-null { background: #c7d7e5; }
+    .dot-rel { background: #2b8dd6; }
+
+    .table-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .mini-table {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 11px;
+      border-radius: 14px;
+      background: #f7fbff;
+      border: 1px solid rgba(198, 230, 255, .9);
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .mini-table span:last-child {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+    }
+
+    .canvas-shell {
+      position: relative;
+      overflow: auto;
+      height: calc(100vh - var(--toolbar-h));
+      background-color: #fff;
+      background-image:
+        linear-gradient(rgba(157, 201, 236, .24) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(157, 201, 236, .24) 1px, transparent 1px),
+        linear-gradient(rgba(198, 230, 255, .34) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(198, 230, 255, .34) 1px, transparent 1px);
+      background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px;
+    }
+
+    .stage {
+      position: relative;
+      width: 1750px;
+      height: 1040px;
+      transform-origin: 0 0;
+      transition: transform .2s ease;
+    }
+
+    .watermark {
+      position: absolute;
+      right: 48px;
+      bottom: 38px;
+      color: rgba(23, 50, 77, .06);
+      font-size: 74px;
+      font-weight: 950;
+      letter-spacing: -.08em;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .relation-layer {
+      position: absolute;
+      inset: 0;
+      width: 1750px;
+      height: 1040px;
+      overflow: visible;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .relation-path {
+      fill: none;
+      stroke: #1583d0;
+      stroke-width: 2.6;
+      filter: drop-shadow(0 5px 8px rgba(17, 115, 189, .18));
+    }
+
+    .relation-path.manager {
+      stroke: #19a976;
+      stroke-dasharray: 8 7;
+    }
+
+    .relation-path.self {
+      stroke: #9b65e5;
+      stroke-dasharray: 5 7;
+    }
+
+    .relation-label {
+      paint-order: stroke;
+      stroke: white;
+      stroke-width: 6px;
+      stroke-linejoin: round;
+      fill: #0d639f;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: -.02em;
+    }
+
+    .erd-node {
+      position: absolute;
+      z-index: 5;
+      width: 390px;
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.96);
+      border: 1px solid rgba(123, 190, 239, .80);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      user-select: none;
+      transition: box-shadow .16s ease, transform .16s ease, border-color .16s ease;
+    }
+
+    .erd-node:hover {
+      border-color: #50b9ff;
+      box-shadow: 0 28px 60px rgba(17, 115, 189, .19);
+    }
+
+    .erd-node.dragging {
+      cursor: grabbing;
+      transform: scale(1.01);
+      box-shadow: 0 34px 70px rgba(17, 115, 189, .24);
+    }
+
+    .node-header {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 15px 16px;
+      cursor: grab;
+      color: #fff;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.16), transparent 40%),
+        linear-gradient(145deg, #29aaff, #0b68ae);
+    }
+
+    .node-header:after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 1px;
+      background: rgba(255,255,255,.36);
+    }
+
+    .node-main-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .db-icon {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: rgba(255,255,255,.18);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.22);
+      flex: 0 0 auto;
+    }
+
+    .table-title {
+      font-size: 15px;
+      font-weight: 950;
+      letter-spacing: -.03em;
+      line-height: 1.05;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .table-desc {
+      margin-top: 4px;
+      color: rgba(255,255,255,.78);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .table-badge {
+      padding: 7px 9px;
+      border-radius: 999px;
+      color: white;
+      background: rgba(255,255,255,.16);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.20);
+      font-size: 11px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .columns {
+      padding: 8px;
+      background: linear-gradient(180deg, #f8fcff, #fff);
+    }
+
+    .col-row {
+      position: relative;
+      display: grid;
+      grid-template-columns: 72px 1fr 86px 38px;
+      align-items: center;
+      min-height: 36px;
+      padding: 0 8px;
+      border-radius: 11px;
+      color: #244258;
+      font-size: 12px;
+      border: 1px solid transparent;
+      background: rgba(255,255,255,.72);
+      margin-bottom: 4px;
+      transition: background .14s ease, border-color .14s ease, transform .14s ease;
+    }
+
+    .col-row:last-child { margin-bottom: 0; }
+
+    .col-row:nth-child(even) { background: rgba(231, 246, 255, .62); }
+
+    .col-row:hover {
+      background: #e9f7ff;
+      border-color: rgba(80, 185, 255, .55);
+      transform: translateX(2px);
+    }
+
+    .col-row.pk {
+      background: linear-gradient(90deg, rgba(208, 239, 255, .98), rgba(244, 251, 255, .9));
+      border-color: rgba(96, 190, 255, .40);
+    }
+
+    .col-row.fk {
+      background: linear-gradient(90deg, rgba(255, 246, 221, .95), rgba(245, 251, 255, .9));
+      border-color: rgba(245, 158, 11, .28);
+    }
+
+    .key-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 22px;
+      border-radius: 7px;
+      color: white;
+      font-size: 10px;
+      font-weight: 950;
+      letter-spacing: .02em;
+      background: #aebed0;
+    }
+
+    .key-badge.pk { background: linear-gradient(145deg, #33b2ff, #0d73be); }
+    .key-badge.fk { background: linear-gradient(145deg, #ffc247, #e78b08); }
+    .key-badge.nn { color: #557089; background: #e7eff7; }
+
+    .col-name {
+      min-width: 0;
+      font-weight: 850;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .col-type {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .col-null {
+      color: #7d94aa;
+      font-size: 10px;
+      font-weight: 900;
+      text-align: right;
+    }
+
+    .anchor {
+      position: absolute;
+      top: 50%;
+      width: 10px;
+      height: 10px;
+      border: 2px solid white;
+      border-radius: 999px;
+      background: #178bd8;
+      box-shadow: 0 0 0 3px rgba(23, 139, 216, .14), 0 4px 9px rgba(23, 50, 77, .20);
+      transform: translateY(-50%);
+      opacity: .92;
+    }
+
+    .anchor.left { left: -5px; }
+    .anchor.right { right: -5px; }
+
+    .footer-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 14px 12px;
+      background: #f6fbff;
+      border-top: 1px solid rgba(198, 230, 255, .95);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #0873ba;
+    }
+
+    .status-pill:before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #20c777;
+      box-shadow: 0 0 0 4px rgba(32, 199, 119, .13);
+    }
+
+    .floating-help {
+      position: absolute;
+      z-index: 15;
+      left: 318px;
+      bottom: 22px;
+      width: max-content;
+      max-width: 470px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.84);
+      border: 1px solid rgba(157, 201, 236, .48);
+      box-shadow: var(--shadow-soft);
+      color: #536d84;
+      font-size: 12px;
+      font-weight: 750;
+      backdrop-filter: blur(14px);
+    }
+
+    .pulse-ring {
+      position: absolute;
+      width: 520px;
+      height: 520px;
+      left: 470px;
+      top: 150px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(143, 208, 255, .16), transparent 64%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @media (max-width: 980px) {
+      body { overflow: auto; }
+      .app { min-width: 1180px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-icon">ER</div>
+        <div>
+          <div class="brand-title">ERP Diagram Studio</div>
+          <div class="brand-subtitle">Premium relational map · Employee domain</div>
+        </div>
+      </div>
+
+      <div class="toolbar-center">
+        <button class="btn" id="btnFit">Fit</button>
+        <button class="btn" id="btnMinus">-</button>
+        <div class="zoom-pill" id="zoomText">100%</div>
+        <button class="btn" id="btnPlus">+</button>
+        <button class="btn" id="btnReset">Reset Layout</button>
+      </div>
+
+      <div class="toolbar-right">
+        <button class="btn" id="btnToggleGrid">Grid On</button>
+        <button class="btn primary" id="btnHighlight">Highlight FK</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <aside class="sidebar">
+        <section class="side-card">
+          <h3 class="side-title">Schema Summary</h3>
+          <div class="metric-grid">
+            <div class="metric">
+              <div class="metric-value">3</div>
+              <div class="metric-label">Tables</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value">4</div>
+              <div class="metric-label">Relations</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value">23</div>
+              <div class="metric-label">Columns</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value">ERP</div>
+              <div class="metric-label">Domain</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="side-card">
+          <h3 class="side-title">Legend</h3>
+          <div class="legend-row"><span class="legend-dot dot-pk"></span> Primary Key</div>
+          <div class="legend-row"><span class="legend-dot dot-fk"></span> Foreign Key</div>
+          <div class="legend-row"><span class="legend-dot dot-null"></span> Nullable Field</div>
+          <div class="legend-row"><span class="legend-dot dot-rel"></span> Relationship Line</div>
+        </section>
+
+        <section class="side-card">
+          <h3 class="side-title">Tables</h3>
+          <div class="table-list">
+            <div class="mini-table"><strong>TB_EMPLOYEE</strong><span>9 cols</span></div>
+            <div class="mini-table"><strong>TB_DEPARTMENT</strong><span>8 cols</span></div>
+            <div class="mini-table"><strong>TB_POSITION</strong><span>6 cols</span></div>
+          </div>
+        </section>
+
+        <section class="side-card">
+          <h3 class="side-title">Relation Notes</h3>
+          <div class="legend-row">EMPLOYEE.DEPT_ID → DEPARTMENT.DEPT_ID</div>
+          <div class="legend-row">EMPLOYEE.POSITION_ID → POSITION.POSITION_ID</div>
+          <div class="legend-row">DEPARTMENT.MANAGER_EMP_ID → EMPLOYEE.EMP_ID</div>
+          <div class="legend-row">DEPARTMENT.PARENT_DEPT_ID → DEPARTMENT.DEPT_ID</div>
+        </section>
+      </aside>
+
+      <section class="canvas-shell" id="canvasShell">
+        <div class="floating-help">테이블 헤더를 드래그하면 관계선이 자동으로 다시 그려집니다. Ctrl + 마우스휠로 확대/축소도 가능합니다.</div>
+        <div class="stage" id="stage">
+          <div class="pulse-ring"></div>
+          <svg class="relation-layer" id="relationLayer" viewBox="0 0 1750 1040" preserveAspectRatio="none">
+            <defs>
+              <marker id="arrowBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#1583d0"></path>
+              </marker>
+              <marker id="arrowGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#19a976"></path>
+              </marker>
+              <marker id="arrowPurple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#9b65e5"></path>
+              </marker>
+            </defs>
+          </svg>
+
+          <article class="erd-node" id="nodeEmp" data-x="655" data-y="365" style="left:655px;top:365px;">
+            <div class="node-header">
+              <div class="node-main-title">
+                <div class="db-icon">▦</div>
+                <div>
+                  <div class="table-title">TB_EMPLOYEE</div>
+                  <div class="table-desc">사원 마스터 / 인사 기본 정보</div>
+                </div>
+              </div>
+              <div class="table-badge">EMP</div>
+            </div>
+            <div class="columns">
+              <div class="col-row pk" id="emp_emp_id"><span class="anchor left"></span><span class="key-badge pk">PK</span><span class="col-name">EMP_ID</span><span class="col-type">BIGINT</span><span class="col-null">NN</span><span class="anchor right"></span></div>
+              <div class="col-row fk" id="emp_dept_id"><span class="anchor left"></span><span class="key-badge fk">FK</span><span class="col-name">DEPT_ID</span><span class="col-type">BIGINT</span><span class="col-null">NN</span><span class="anchor right"></span></div>
+              <div class="col-row fk" id="emp_position_id"><span class="anchor left"></span><span class="key-badge fk">FK</span><span class="col-name">POSITION_ID</span><span class="col-type">BIGINT</span><span class="col-null">NN</span><span class="anchor right"></span></div>
+              <div class="col-row"><span class="key-badge nn">NN</span><span class="col-name">EMP_NO</span><span class="col-type">VARCHAR(30)</span><span class="col-null">NN</span></div>
+              <div class="col-row"><span class="key-badge nn">NN</span><span class="col-name">EMP_NAME</span><span class="col-type">VARCHAR(80)</span><span class="col-null">NN</span></div>
+              <div class="col-row"><span class="key-badge nn">UQ</span><span class="col-name">EMAIL</span><span class="col-type">VARCHAR(120)</span><span class="col-null">NN</span></div>
+              <div class="col-row"><span class="key-badge nn">IDX</span><span class="col-name">HIRE_DATE</span><span class="col-type">DATE</span><span class="col-null">NN</span></div>
+              <div class="col-row"><span class="key-badge nn">NN</span><span class="col-name">EMP_STATUS</span><span class="col-type">VARCHAR(20)</span><span class="col-null">NN</span></div>
+              <div class="col-row"><span class="key-badge nn">-</span><span class="col-name">CREATE_DT</span><span class="col-type">DATETIME</span><span class="col-null">NN</span></div>
+            </div>
+            <div class="footer-strip"><span class="status-pill">Active table</span><span>Rows 12,438</span></div>
+          </article>
+
+          <article class="erd-node" id="nodeDept" data-x="125" data-y="230" style="left:125px;top:230px;">
+            <div class="node-header">
+              <div class="node-main-title">
+                <div class="db-icon">▦</div>
+                <div>
+                  <div class="table-title">TB_DEPARTMENT</div>
+                  <div class="table-desc">부서 마스터 / 조직 구조</div>
+                </div>
+              </div>
+              <div class="table-badge">DEPT</div>
+            </div>
+            <div class="columns">
+              <div class="col-row pk" id="dept_dept_id"><span class="anchor left"></span><span class="key-badge pk">PK</span><span class="col-name">DEPT_ID</span><span class="col-type">BIGINT</span><span class="col-null">NN</span><span class="anchor right"></span></div>
+              <div class="col-row fk" id="dept_parent_dept_id"><span class="anchor left"></span><span class="key-badge fk">FK</span><span class="col-name">PARENT_DEPT_ID</span><span class="col-type">BIGINT</span><span class="col-null">NULL</span><span class="anchor right"></span></div>
+              <div class="col-row fk" id="dept_manager_emp_id"><span class="anchor left"></span><span class="key-badge fk">FK</span><span class="col-name">MANAGER_EMP_ID</span><span class="col-type">BIGINT</span><span class="col-null">NULL</span><span class="anchor right"></span></div>
+              <div class="col-row"><span class="key-badge nn">UQ</span><span class="col-name">DEPT_CODE</span><span class="col-type">VARCHAR(30)</span><span class="col-null">NN</span></div>
+              <div class="col-row"><span class="key-badge nn">NN</span><span class="col-name">DEPT_NAME</span><span class="col-type">VARCHAR(100)</span><span class="col-null">NN</span></div>
+              <div class="col-row"><span class="key-badge nn">IDX</span><span class="col-name">SORT_NO</span><span class="col-type">INT</span><span class="col-null">NN</span></div>
+              <div class="col-row"><span class="key-badge nn">NN</span><span class="col-name">USE_YN</span><span class="col-type">CHAR(1)</span><span class="col-null">NN</span></div>
+              <div class="col-row"><span class="key-badge nn">-</span><span class="col-name">UPDATE_DT</span><span class="col-type">DATETIME</span><span class="col-null">NULL</span></div>
+            </div>
+            <div class="footer-strip"><span class="status-pill">Referenced</span><span>Rows 64</span></div>
+          </article>
+
+          <article class="erd-node" id="nodePosition" data-x="1215" data-y="260" style="left:1215px;top:260px;">
+            <div class="node-header">
+              <div class="node-main-title">
+                <div class="db-icon">▦</div>
+                <div>
+                  <div class="table-title">TB_POSITION</div>
+                  <div class="table-desc">직급/직책 마스터</div>
+                </div>
+              </div>
+              <div class="table-badge">POS</div>
+            </div>
+            <div class="columns">
+              <div class="col-row pk" id="pos_position_id"><span class="anchor left"></span><span class="key-badge pk">PK</span><span class="col-name">POSITION_ID</span><span class="col-type">BIGINT</span><span class="col-null">NN</span><span class="anchor right"></span></div>
+              <div class="col-row"><span class="key-badge nn">UQ</span><span class="col-name">POSITION_CODE</span><span class="col-type">VARCHAR(30)</span><span class="col-null">NN</span></div>
+              <div class="col-row"><span class="key-badge nn">NN</span><span class="col-name">POSITION_NAME</span><span class="col-type">VARCHAR(80)</span><span class="col-null">NN</span></div>
+              <div class="col-row"><span class="key-badge nn">IDX</span><span class="col-name">LEVEL_NO</span><span class="col-type">INT</span><span class="col-null">NN</span></div>
+              <div class="col-row"><span class="key-badge nn">NN</span><span class="col-name">APPROVAL_LEVEL</span><span class="col-type">INT</span><span class="col-null">NN</span></div>
+              <div class="col-row"><span class="key-badge nn">NN</span><span class="col-name">USE_YN</span><span class="col-type">CHAR(1)</span><span class="col-null">NN</span></div>
+            </div>
+            <div class="footer-strip"><span class="status-pill">Referenced</span><span>Rows 18</span></div>
+          </article>
+
+          <div class="watermark">ERP</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const stage = document.getElementById('stage');
+      const shell = document.getElementById('canvasShell');
+      const svg = document.getElementById('relationLayer');
+      const zoomText = document.getElementById('zoomText');
+      const btnPlus = document.getElementById('btnPlus');
+      const btnMinus = document.getElementById('btnMinus');
+      const btnFit = document.getElementById('btnFit');
+      const btnReset = document.getElementById('btnReset');
+      const btnToggleGrid = document.getElementById('btnToggleGrid');
+      const btnHighlight = document.getElementById('btnHighlight');
+
+      let scale = 1;
+      let gridOn = true;
+      let fkHighlight = false;
+
+      const defaultPositions = {
+        nodeDept: { x: 125, y: 230 },
+        nodeEmp: { x: 655, y: 365 },
+        nodePosition: { x: 1215, y: 260 }
+      };
+
+      const relations = [
+        {
+          from: 'emp_dept_id',
+          to: 'dept_dept_id',
+          fromSide: 'left',
+          toSide: 'right',
+          label: 'N : 1  부서 배정',
+          marker: 'arrowBlue',
+          className: 'relation-path'
+        },
+        {
+          from: 'emp_position_id',
+          to: 'pos_position_id',
+          fromSide: 'right',
+          toSide: 'left',
+          label: 'N : 1  직급 참조',
+          marker: 'arrowBlue',
+          className: 'relation-path'
+        },
+        {
+          from: 'dept_manager_emp_id',
+          to: 'emp_emp_id',
+          fromSide: 'right',
+          toSide: 'left',
+          label: '1 : 0..1  부서장',
+          marker: 'arrowGreen',
+          className: 'relation-path manager'
+        },
+        {
+          from: 'dept_parent_dept_id',
+          to: 'dept_dept_id',
+          fromSide: 'left',
+          toSide: 'left',
+          label: 'Self  상위부서',
+          marker: 'arrowPurple',
+          className: 'relation-path self',
+          selfLoop: true
+        }
+      ];
+
+      function setScale(next) {
+        scale = Math.max(0.55, Math.min(1.35, next));
+        stage.style.transform = `scale(${scale})`;
+        zoomText.textContent = Math.round(scale * 100) + '%';
+        drawRelations();
+      }
+
+      function getAnchor(columnId, side) {
+        const el = document.getElementById(columnId);
+        const stageRect = stage.getBoundingClientRect();
+        const rect = el.getBoundingClientRect();
+        const x = (rect.left - stageRect.left) / scale + (side === 'right' ? rect.width / scale : 0);
+        const y = (rect.top - stageRect.top) / scale + rect.height / (2 * scale);
+        return { x, y };
+      }
+
+      function pathBetween(a, b, relation) {
+        if (relation.selfLoop) {
+          const left = a.x;
+          const y1 = a.y;
+          const y2 = b.y;
+          const loopX = left - 105;
+          return `M ${left} ${y1} C ${loopX} ${y1}, ${loopX} ${y2}, ${left} ${y2}`;
+        }
+
+        const dx = Math.abs(b.x - a.x);
+        const curve = Math.max(120, dx * 0.48);
+        const aDir = relation.fromSide === 'right' ? curve : -curve;
+        const bDir = relation.toSide === 'right' ? curve : -curve;
+        return `M ${a.x} ${a.y} C ${a.x + aDir} ${a.y}, ${b.x + bDir} ${b.y}, ${b.x} ${b.y}`;
+      }
+
+      function midpoint(a, b, relation) {
+        if (relation.selfLoop) {
+          return { x: a.x - 104, y: (a.y + b.y) / 2 - 10 };
+        }
+        return {
+          x: (a.x + b.x) / 2,
+          y: (a.y + b.y) / 2 - 13
+        };
+      }
+
+      function drawRelations() {
+        Array.from(svg.querySelectorAll('.dynamic-rel')).forEach(el => el.remove());
+
+        relations.forEach((relation, index) => {
+          const a = getAnchor(relation.from, relation.fromSide);
+          const b = getAnchor(relation.to, relation.toSide);
+          const d = pathBetween(a, b, relation);
+          const mid = midpoint(a, b, relation);
+
+          const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          path.setAttribute('d', d);
+          path.setAttribute('class', relation.className + ' dynamic-rel');
+          path.setAttribute('marker-end', `url(#${relation.marker})`);
+          path.setAttribute('opacity', fkHighlight ? '1' : '.92');
+          svg.appendChild(path);
+
+          const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          text.setAttribute('x', mid.x);
+          text.setAttribute('y', mid.y);
+          text.setAttribute('text-anchor', 'middle');
+          text.setAttribute('class', 'relation-label dynamic-rel');
+          text.textContent = relation.label;
+          svg.appendChild(text);
+
+          const halo = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          halo.setAttribute('cx', a.x);
+          halo.setAttribute('cy', a.y);
+          halo.setAttribute('r', fkHighlight ? '7' : '4.5');
+          halo.setAttribute('fill', index === 2 ? '#19a976' : index === 3 ? '#9b65e5' : '#1583d0');
+          halo.setAttribute('opacity', fkHighlight ? '.95' : '.75');
+          halo.setAttribute('class', 'dynamic-rel');
+          svg.appendChild(halo);
+        });
+      }
+
+      function enableDrag(node) {
+        const header = node.querySelector('.node-header');
+        let dragging = false;
+        let startX = 0;
+        let startY = 0;
+        let nodeX = 0;
+        let nodeY = 0;
+
+        header.addEventListener('pointerdown', function (e) {
+          dragging = true;
+          node.classList.add('dragging');
+          header.setPointerCapture(e.pointerId);
+          startX = e.clientX;
+          startY = e.clientY;
+          nodeX = parseFloat(node.dataset.x || node.style.left || 0);
+          nodeY = parseFloat(node.dataset.y || node.style.top || 0);
+        });
+
+        header.addEventListener('pointermove', function (e) {
+          if (!dragging) return;
+          const dx = (e.clientX - startX) / scale;
+          const dy = (e.clientY - startY) / scale;
+          const nextX = Math.max(20, Math.min(1320, nodeX + dx));
+          const nextY = Math.max(20, Math.min(820, nodeY + dy));
+          node.dataset.x = nextX;
+          node.dataset.y = nextY;
+          node.style.left = nextX + 'px';
+          node.style.top = nextY + 'px';
+          drawRelations();
+        });
+
+        function stopDrag(e) {
+          if (!dragging) return;
+          dragging = false;
+          node.classList.remove('dragging');
+          try { header.releasePointerCapture(e.pointerId); } catch (err) {}
+        }
+
+        header.addEventListener('pointerup', stopDrag);
+        header.addEventListener('pointercancel', stopDrag);
+      }
+
+      document.querySelectorAll('.erd-node').forEach(enableDrag);
+
+      btnPlus.addEventListener('click', () => setScale(scale + 0.1));
+      btnMinus.addEventListener('click', () => setScale(scale - 0.1));
+      btnFit.addEventListener('click', () => {
+        setScale(0.78);
+        shell.scrollTo({ left: 0, top: 60, behavior: 'smooth' });
+      });
+      btnReset.addEventListener('click', () => {
+        Object.keys(defaultPositions).forEach(id => {
+          const node = document.getElementById(id);
+          const pos = defaultPositions[id];
+          node.dataset.x = pos.x;
+          node.dataset.y = pos.y;
+          node.style.left = pos.x + 'px';
+          node.style.top = pos.y + 'px';
+        });
+        setScale(1);
+        drawRelations();
+      });
+
+      btnToggleGrid.addEventListener('click', () => {
+        gridOn = !gridOn;
+        shell.style.backgroundImage = gridOn
+          ? 'linear-gradient(rgba(157, 201, 236, .24) 1px, transparent 1px), linear-gradient(90deg, rgba(157, 201, 236, .24) 1px, transparent 1px), linear-gradient(rgba(198, 230, 255, .34) 1px, transparent 1px), linear-gradient(90deg, rgba(198, 230, 255, .34) 1px, transparent 1px)'
+          : 'none';
+        btnToggleGrid.textContent = gridOn ? 'Grid On' : 'Grid Off';
+      });
+
+      btnHighlight.addEventListener('click', () => {
+        fkHighlight = !fkHighlight;
+        document.querySelectorAll('.col-row.fk').forEach(row => {
+          row.style.boxShadow = fkHighlight ? '0 0 0 3px rgba(245, 158, 11, .20)' : '';
+        });
+        btnHighlight.textContent = fkHighlight ? 'Normal View' : 'Highlight FK';
+        drawRelations();
+      });
+
+      shell.addEventListener('wheel', function (e) {
+        if (!e.ctrlKey) return;
+        e.preventDefault();
+        const direction = e.deltaY > 0 ? -0.06 : 0.06;
+        setScale(scale + direction);
+      }, { passive: false });
+
+      window.addEventListener('resize', drawRelations);
+
+      setTimeout(function () {
+        drawRelations();
+        shell.scrollTo({ left: 170, top: 80 });
+      }, 50);
+    })();
+  </script>
+</body>
+</html>
