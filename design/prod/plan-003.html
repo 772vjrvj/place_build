@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>상품별 크롤링 제한</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Pretendard', sans-serif;
+        }
+
+        body{
+            background:#f5f7fb;
+            display:flex;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+        .sidebar{
+            width:260px;
+            height:100vh;
+            background:linear-gradient(180deg,#071325,#08192f,#06101e);
+            color:#fff;
+            position:fixed;
+            left:0;
+            top:0;
+            padding:20px 15px;
+            overflow-y:auto;
+        }
+
+        .logo{
+            font-size:28px;
+            font-weight:700;
+            margin-bottom:40px;
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .menu{
+            list-style:none;
+        }
+
+        .menu li{
+            margin-bottom:6px;
+        }
+
+        .menu a{
+            text-decoration:none;
+            color:#fff;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding:14px 14px;
+            border-radius:10px;
+            transition:0.2s;
+            font-size:15px;
+            font-weight:500;
+        }
+
+        .menu a:hover{
+            background:#0f2f57;
+        }
+
+        .menu a.active{
+            background:#2563eb;
+        }
+
+        .menu-left{
+            display:flex;
+            align-items:center;
+            gap:12px;
+        }
+
+        .submenu{
+            list-style:none;
+            margin-top:8px;
+            margin-left:10px;
+        }
+
+        .submenu li a{
+            padding:12px 16px;
+            background:#0a1830;
+            font-size:14px;
+        }
+
+        .submenu li a.active-sub{
+            background:#11284c;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+        .main{
+            margin-left:260px;
+            width:calc(100% - 260px);
+            min-height:100vh;
+        }
+
+        /* TOPBAR */
+        .topbar{
+            height:70px;
+            background:#fff;
+            border-bottom:1px solid #e5e7eb;
+            display:flex;
+            justify-content:flex-end;
+            align-items:center;
+            padding:0 30px;
+        }
+
+        .top-icons{
+            display:flex;
+            align-items:center;
+            gap:25px;
+            color:#4b5563;
+            font-size:18px;
+        }
+
+        .admin{
+            font-size:14px;
+            font-weight:600;
+        }
+
+        /* CONTENT */
+        .content{
+            padding:30px;
+        }
+
+        .page-badge{
+            background:#2563eb;
+            color:#fff;
+            display:inline-block;
+            padding:18px 40px;
+            border-radius:12px;
+            font-size:38px;
+            font-weight:800;
+            margin-bottom:35px;
+        }
+
+        .page-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-start;
+            margin-bottom:30px;
+        }
+
+        .page-title{
+            font-size:40px;
+            font-weight:800;
+            color:#111827;
+        }
+
+        .page-desc{
+            margin-top:10px;
+            color:#6b7280;
+            font-size:15px;
+        }
+
+        .breadcrumb{
+            color:#9ca3af;
+            font-size:14px;
+        }
+
+        /* CARD */
+        .card{
+            background:#fff;
+            border:1px solid #e5e7eb;
+            border-radius:14px;
+            overflow:hidden;
+        }
+
+        /* FILTER */
+        .filter-area{
+            padding:24px;
+            border-bottom:1px solid #edf0f5;
+        }
+
+        .filter-wrap{
+            display:flex;
+            align-items:center;
+            gap:16px;
+        }
+
+        .filter-label{
+            font-size:15px;
+            font-weight:600;
+            color:#374151;
+        }
+
+        .select-box{
+            width:340px;
+            height:50px;
+            border:1px solid #d1d5db;
+            border-radius:8px;
+            padding:0 14px;
+            font-size:15px;
+            outline:none;
+        }
+
+        /* TABLE */
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        thead{
+            background:#fafafa;
+        }
+
+        thead th{
+            padding:18px;
+            text-align:left;
+            border-bottom:1px solid #e5e7eb;
+            font-size:14px;
+            color:#374151;
+        }
+
+        tbody td{
+            padding:18px;
+            border-bottom:1px solid #f0f2f5;
+            font-size:15px;
+            color:#111827;
+        }
+
+        .center{
+            text-align:center;
+        }
+
+        .input-box{
+            width:120px;
+            height:44px;
+            border:1px solid #d1d5db;
+            border-radius:8px;
+            text-align:center;
+            font-size:15px;
+            font-weight:600;
+            outline:none;
+        }
+
+        /* TOGGLE */
+        .switch{
+            position:relative;
+            display:inline-block;
+            width:44px;
+            height:24px;
+        }
+
+        .switch input{
+            opacity:0;
+            width:0;
+            height:0;
+        }
+
+        .slider{
+            position:absolute;
+            cursor:pointer;
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+            background:#d1d5db;
+            transition:.3s;
+            border-radius:30px;
+        }
+
+        .slider:before{
+            position:absolute;
+            content:"";
+            width:18px;
+            height:18px;
+            left:3px;
+            top:3px;
+            background:#fff;
+            transition:.3s;
+            border-radius:50%;
+        }
+
+        .switch input:checked + .slider{
+            background:#2563eb;
+        }
+
+        .switch input:checked + .slider:before{
+            transform:translateX(20px);
+        }
+
+        /* FOOT */
+        .bottom-area{
+            padding:24px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        .info-box{
+            background:#eef4ff;
+            color:#4f74d9;
+            border-radius:10px;
+            padding:16px 20px;
+            font-size:14px;
+            display:flex;
+            align-items:center;
+            gap:10px;
+            font-weight:600;
+            width:100%;
+        }
+
+        .save-btn{
+            background:#2563eb;
+            border:none;
+            color:#fff;
+            height:50px;
+            padding:0 30px;
+            border-radius:10px;
+            font-size:15px;
+            font-weight:700;
+            cursor:pointer;
+            margin-left:20px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- =========================
+     SIDEBAR
+========================= -->
+<div class="sidebar">
+
+    <div class="logo">
+        <i class="fa-solid fa-location-dot"></i>
+        플레이스 CRM
+    </div>
+
+    <ul class="menu">
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-solid fa-house"></i>
+                    대시보드
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-solid fa-chart-line"></i>
+                    순위체크
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-solid fa-handshake"></i>
+                    영업관리
+                </div>
+                <i class="fa-solid fa-angle-down"></i>
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-regular fa-clipboard"></i>
+                    공지관리
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-regular fa-user"></i>
+                    직원관리
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-regular fa-building"></i>
+                    업체관리
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="#" class="active">
+                <div class="menu-left">
+                    <i class="fa-solid fa-box"></i>
+                    상품관리
+                </div>
+                <i class="fa-solid fa-angle-down"></i>
+            </a>
+
+            <ul class="submenu">
+                <li><a href="#">상품목록</a></li>
+                <li><a href="#">상품별 메뉴권한</a></li>
+                <li><a href="#" class="active-sub">상품별 크롤링 제한</a></li>
+                <li><a href="#">상품별 기능정책</a></li>
+                <li><a href="#">상품별 할당량</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-solid fa-robot"></i>
+                    크롤링관리
+                </div>
+                <i class="fa-solid fa-angle-down"></i>
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-solid fa-file-lines"></i>
+                    로그관리
+                </div>
+                <i class="fa-solid fa-angle-down"></i>
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-solid fa-gear"></i>
+                    설정관리
+                </div>
+                <i class="fa-solid fa-angle-down"></i>
+            </a>
+        </li>
+
+    </ul>
+
+</div>
+
+<!-- =========================
+     MAIN
+========================= -->
+<div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+
+        <div class="top-icons">
+            <i class="fa-regular fa-bell"></i>
+            <i class="fa-regular fa-user"></i>
+
+            <div class="admin">
+                관리자
+                <i class="fa-solid fa-angle-down"></i>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <div class="page-badge">
+            3. 상품별 크롤링 제한
+        </div>
+
+        <div class="page-header">
+
+            <div>
+                <div class="page-title">
+                    상품별 크롤링 제한
+                </div>
+
+                <div class="page-desc">
+                    상품별 웹 크롤링 제한 및 정책을 설정합니다.
+                </div>
+            </div>
+
+            <div class="breadcrumb">
+                홈 / 상품관리 / 상품별 크롤링 제한
+            </div>
+
+        </div>
+
+        <!-- CARD -->
+        <div class="card">
+
+            <!-- FILTER -->
+            <div class="filter-area">
+
+                <div class="filter-wrap">
+
+                    <div class="filter-label">
+                        상품 선택
+                    </div>
+
+                    <select class="select-box">
+                        <option>STANDARD (Standard)</option>
+                        <option>PREMIUM (Premium)</option>
+                    </select>
+
+                </div>
+
+            </div>
+
+            <!-- TABLE -->
+            <table>
+
+                <thead>
+                <tr>
+                    <th width="25%">항목</th>
+                    <th width="35%">설명</th>
+                    <th class="center">STANDARD</th>
+                    <th class="center">PREMIUM</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr>
+                    <td><b>월 크롤링 제한 건수</b></td>
+                    <td>월 최대 크롤링 실행 가능 건수</td>
+
+                    <td class="center">
+                        <input type="text" class="input-box" value="5,000">
+                    </td>
+
+                    <td class="center">
+                        <input type="text" class="input-box" value="20,000">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><b>1일 크롤링 제한 건수</b></td>
+                    <td>1일 최대 크롤링 실행 가능 건수</td>
+
+                    <td class="center">
+                        <input type="text" class="input-box" value="500">
+                    </td>
+
+                    <td class="center">
+                        <input type="text" class="input-box" value="2,000">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><b>실시간 조회 제한 건수</b></td>
+                    <td>월 최대 실시간 조회 가능 건수</td>
+
+                    <td class="center">
+                        <input type="text" class="input-box" value="0">
+                    </td>
+
+                    <td class="center">
+                        <input type="text" class="input-box" value="5,000">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><b>초과 시 실행 제한</b></td>
+                    <td>월 사용량 초과 시 실행 차단 여부</td>
+
+                    <td class="center">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+
+                    <td class="center">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><b>초과 시 알림</b></td>
+                    <td>사용량 초과 시 관리자 알림 여부</td>
+
+                    <td class="center">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+
+                    <td class="center">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><b>알림 기준(%)</b></td>
+                    <td>사용량이 기준 % 초과시 알림</td>
+
+                    <td class="center">
+                        <input type="text" class="input-box" value="80%">
+                    </td>
+
+                    <td class="center">
+                        <input type="text" class="input-box" value="80%">
+                    </td>
+                </tr>
+
+                </tbody>
+
+            </table>
+
+            <!-- BOTTOM -->
+            <div class="bottom-area">
+
+                <div class="info-box">
+                    <i class="fa-solid fa-circle-info"></i>
+                    크롤링 제한 정책은 즉시 적용됩니다.
+                </div>
+
+                <button class="save-btn">
+                    저장
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

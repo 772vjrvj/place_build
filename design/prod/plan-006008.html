@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>업체별 구독관리</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Pretendard', sans-serif;
+        }
+
+        body{
+            background:#f5f7fb;
+            display:flex;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+        .sidebar{
+            width:260px;
+            height:100vh;
+            background:linear-gradient(180deg,#071325,#08192f,#06101e);
+            color:#fff;
+            position:fixed;
+            left:0;
+            top:0;
+            padding:20px 15px;
+            overflow-y:auto;
+        }
+
+        .logo{
+            font-size:28px;
+            font-weight:700;
+            margin-bottom:40px;
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .menu{
+            list-style:none;
+        }
+
+        .menu li{
+            margin-bottom:6px;
+        }
+
+        .menu a{
+            text-decoration:none;
+            color:#fff;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding:14px 14px;
+            border-radius:10px;
+            transition:0.2s;
+            font-size:15px;
+            font-weight:500;
+        }
+
+        .menu a:hover{
+            background:#0f2f57;
+        }
+
+        .menu a.active{
+            background:#2563eb;
+        }
+
+        .menu-left{
+            display:flex;
+            align-items:center;
+            gap:12px;
+        }
+
+        .submenu{
+            list-style:none;
+            margin-top:8px;
+            margin-left:10px;
+        }
+
+        .submenu li a{
+            padding:12px 16px;
+            background:#0a1830;
+            font-size:14px;
+        }
+
+        .submenu li a.active-sub{
+            background:#11284c;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+        .main{
+            margin-left:260px;
+            width:calc(100% - 260px);
+            min-height:100vh;
+        }
+
+        /* TOPBAR */
+        .topbar{
+            height:70px;
+            background:#fff;
+            border-bottom:1px solid #e5e7eb;
+            display:flex;
+            justify-content:flex-end;
+            align-items:center;
+            padding:0 30px;
+        }
+
+        .top-icons{
+            display:flex;
+            align-items:center;
+            gap:25px;
+            color:#4b5563;
+            font-size:18px;
+        }
+
+        .admin{
+            font-size:14px;
+            font-weight:600;
+        }
+
+        /* CONTENT */
+        .content{
+            padding:30px;
+        }
+
+        .page-badge{
+            background:#2563eb;
+            color:#fff;
+            display:inline-block;
+            padding:18px 40px;
+            border-radius:12px;
+            font-size:38px;
+            font-weight:800;
+            margin-bottom:35px;
+        }
+
+        .page-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-start;
+            margin-bottom:30px;
+        }
+
+        .page-title{
+            font-size:40px;
+            font-weight:800;
+            color:#111827;
+        }
+
+        .page-desc{
+            margin-top:10px;
+            color:#6b7280;
+            font-size:15px;
+        }
+
+        .breadcrumb{
+            color:#9ca3af;
+            font-size:14px;
+        }
+
+        /* SEARCH */
+        .search-card{
+            background:#fff;
+            border:1px solid #e5e7eb;
+            border-radius:14px;
+            padding:24px;
+            margin-bottom:20px;
+        }
+
+        .search-grid{
+            display:grid;
+            grid-template-columns:2fr 1fr 1fr 1fr 1.5fr auto auto;
+            gap:16px;
+            align-items:end;
+        }
+
+        .form-group{
+            display:flex;
+            flex-direction:column;
+            gap:8px;
+        }
+
+        .form-label{
+            font-size:14px;
+            font-weight:700;
+            color:#374151;
+        }
+
+        .input-box,
+        .select-box{
+            height:48px;
+            border:1px solid #d1d5db;
+            border-radius:8px;
+            padding:0 14px;
+            font-size:14px;
+            outline:none;
+            background:#fff;
+        }
+
+        .date-wrap{
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .search-btn{
+            background:#2563eb;
+            color:#fff;
+            border:none;
+            height:48px;
+            padding:0 28px;
+            border-radius:8px;
+            font-size:15px;
+            font-weight:700;
+            cursor:pointer;
+        }
+
+        .reset-btn{
+            background:#fff;
+            border:1px solid #d1d5db;
+            height:48px;
+            padding:0 24px;
+            border-radius:8px;
+            font-size:15px;
+            font-weight:700;
+            cursor:pointer;
+        }
+
+        /* TABLE */
+        .table-card{
+            background:#fff;
+            border:1px solid #e5e7eb;
+            border-radius:14px;
+            overflow:hidden;
+        }
+
+        .table-top{
+            display:flex;
+            justify-content:flex-end;
+            padding:18px;
+            border-bottom:1px solid #edf0f5;
+        }
+
+        .download-btn{
+            border:1px solid #d1d5db;
+            background:#fff;
+            height:42px;
+            padding:0 18px;
+            border-radius:8px;
+            font-size:14px;
+            font-weight:600;
+            cursor:pointer;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        thead{
+            background:#fafafa;
+        }
+
+        thead th{
+            padding:16px;
+            border-bottom:1px solid #e5e7eb;
+            font-size:14px;
+            color:#374151;
+        }
+
+        tbody td{
+            padding:16px;
+            border-bottom:1px solid #f0f2f5;
+            font-size:14px;
+            color:#111827;
+            text-align:center;
+        }
+
+        /* BADGE */
+        .badge{
+            display:inline-block;
+            padding:6px 12px;
+            border-radius:999px;
+            font-size:12px;
+            font-weight:700;
+        }
+
+        .badge-premium{
+            background:#e0ecff;
+            color:#2563eb;
+        }
+
+        .badge-standard{
+            background:#f3f4f6;
+            color:#4b5563;
+        }
+
+        .badge-success{
+            background:#dcfce7;
+            color:#16a34a;
+        }
+
+        .badge-warning{
+            background:#fff7ed;
+            color:#ea580c;
+        }
+
+        .badge-danger{
+            background:#fee2e2;
+            color:#dc2626;
+        }
+
+        .badge-gray{
+            background:#f3f4f6;
+            color:#6b7280;
+        }
+
+        .danger-text{
+            color:#ef4444;
+            font-weight:700;
+        }
+
+        .action-icons{
+            display:flex;
+            justify-content:center;
+            gap:14px;
+            color:#6b7280;
+            font-size:15px;
+        }
+
+        /* PAGINATION */
+        .pagination{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            gap:8px;
+            padding:24px;
+        }
+
+        .page-btn{
+            width:38px;
+            height:38px;
+            border:1px solid #d1d5db;
+            background:#fff;
+            border-radius:8px;
+            cursor:pointer;
+            font-weight:600;
+        }
+
+        .page-btn.active{
+            background:#2563eb;
+            color:#fff;
+            border:none;
+        }
+
+        .page-size{
+            margin-left:auto;
+            margin-right:20px;
+        }
+
+        /* SUMMARY */
+        .summary-grid{
+            display:grid;
+            grid-template-columns:repeat(6,1fr);
+            gap:18px;
+            margin-top:24px;
+        }
+
+        .summary-card{
+            background:#fff;
+            border:1px solid #e5e7eb;
+            border-radius:14px;
+            padding:22px;
+        }
+
+        .summary-title{
+            color:#6b7280;
+            font-size:14px;
+            margin-bottom:18px;
+            font-weight:600;
+        }
+
+        .summary-value{
+            font-size:48px;
+            font-weight:800;
+            color:#111827;
+        }
+
+        .summary-unit{
+            font-size:18px;
+            margin-left:4px;
+        }
+
+        .summary-icon{
+            width:46px;
+            height:46px;
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            margin-top:16px;
+            font-size:18px;
+        }
+
+        .green{background:#dcfce7;color:#16a34a;}
+        .orange{background:#fff7ed;color:#ea580c;}
+        .red{background:#fee2e2;color:#dc2626;}
+        .yellow{background:#fef3c7;color:#d97706;}
+        .purple{background:#ede9fe;color:#7c3aed;}
+
+    </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+    <div class="logo">
+        <i class="fa-solid fa-location-dot"></i>
+        플레이스 CRM
+    </div>
+
+    <ul class="menu">
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-solid fa-house"></i>
+                    대시보드
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-solid fa-chart-line"></i>
+                    순위체크
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-solid fa-handshake"></i>
+                    영업관리
+                </div>
+                <i class="fa-solid fa-angle-down"></i>
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-regular fa-clipboard"></i>
+                    공지관리
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-regular fa-user"></i>
+                    직원관리
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-regular fa-building"></i>
+                    업체관리
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="#" class="active">
+                <div class="menu-left">
+                    <i class="fa-solid fa-box"></i>
+                    상품관리
+                </div>
+                <i class="fa-solid fa-angle-down"></i>
+            </a>
+
+            <ul class="submenu">
+                <li><a href="#">상품목록</a></li>
+                <li><a href="#">상품별 메뉴권한</a></li>
+                <li><a href="#">상품별 크롤링 제한</a></li>
+                <li><a href="#">상품별 기능정책</a></li>
+                <li><a href="#">상품별 할당량</a></li>
+                <li><a href="#" class="active-sub">업체별 구독관리</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-solid fa-robot"></i>
+                    크롤링관리
+                </div>
+                <i class="fa-solid fa-angle-down"></i>
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-solid fa-file-lines"></i>
+                    로그관리
+                </div>
+                <i class="fa-solid fa-angle-down"></i>
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-solid fa-gear"></i>
+                    설정관리
+                </div>
+                <i class="fa-solid fa-angle-down"></i>
+            </a>
+        </li>
+
+    </ul>
+
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+
+        <div class="top-icons">
+            <i class="fa-regular fa-bell"></i>
+            <i class="fa-regular fa-user"></i>
+
+            <div class="admin">
+                관리자
+                <i class="fa-solid fa-angle-down"></i>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <div class="page-badge">
+            6. 업체별 구독관리
+        </div>
+
+        <div class="page-header">
+
+            <div>
+                <div class="page-title">
+                    업체별 구독관리
+                </div>
+
+                <div class="page-desc">
+                    업체별 가입 상품, 결제 상태, 시작일, 만료일을 관리합니다.
+                </div>
+            </div>
+
+            <div class="breadcrumb">
+                홈 / 상품관리 / 업체별 구독관리
+            </div>
+
+        </div>
+
+        <!-- SEARCH -->
+        <div class="search-card">
+
+            <div class="search-grid">
+
+                <div class="form-group">
+                    <div class="form-label">업체명 또는 사업자번호</div>
+                    <input type="text"
+                           class="input-box"
+                           placeholder="업체명 또는 사업자번호 검색">
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">상품</div>
+
+                    <select class="select-box">
+                        <option>전체</option>
+                        <option>STANDARD</option>
+                        <option>PREMIUM</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">결제 상태</div>
+
+                    <select class="select-box">
+                        <option>전체</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">구독 상태</div>
+
+                    <select class="select-box">
+                        <option>전체</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">기간</div>
+
+                    <div class="date-wrap">
+                        <input type="date" class="input-box">
+                        <span>~</span>
+                        <input type="date" class="input-box">
+                    </div>
+                </div>
+
+                <button class="search-btn">
+                    검색
+                </button>
+
+                <button class="reset-btn">
+                    초기화
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-card">
+
+            <div class="table-top">
+                <button class="download-btn">
+                    <i class="fa-solid fa-download"></i>
+                    엑셀 다운로드
+                </button>
+            </div>
+
+            <table>
+
+                <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>업체명</th>
+                    <th>사업자번호</th>
+                    <th>가입 상품</th>
+                    <th>결제 상태</th>
+                    <th>구독 상태</th>
+                    <th>시작일</th>
+                    <th>만료일</th>
+                    <th>D-</th>
+                    <th>자동연장</th>
+                    <th>관리</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr>
+                    <td>1</td>
+                    <td>(주)강남미용실</td>
+                    <td>123-45-67890</td>
+                    <td><span class="badge badge-premium">PREMIUM</span></td>
+                    <td><span class="badge badge-success">결제완료</span></td>
+                    <td><span class="badge badge-success">사용중</span></td>
+                    <td>2024-01-01</td>
+                    <td>2024-12-31</td>
+                    <td class="danger-text">D-45</td>
+                    <td>Y</td>
+
+                    <td>
+                        <div class="action-icons">
+                            <i class="fa-regular fa-eye"></i>
+                            <i class="fa-regular fa-pen-to-square"></i>
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>2</td>
+                    <td>홍길동헬스장</td>
+                    <td>234-56-78901</td>
+                    <td><span class="badge badge-standard">STANDARD</span></td>
+                    <td><span class="badge badge-success">결제완료</span></td>
+                    <td><span class="badge badge-success">사용중</span></td>
+                    <td>2024-02-15</td>
+                    <td>2025-02-14</td>
+                    <td class="danger-text">D-90</td>
+                    <td>Y</td>
+
+                    <td>
+                        <div class="action-icons">
+                            <i class="fa-regular fa-eye"></i>
+                            <i class="fa-regular fa-pen-to-square"></i>
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>3</td>
+                    <td>뷰티라인 에스테틱</td>
+                    <td>345-67-89012</td>
+                    <td><span class="badge badge-premium">PREMIUM</span></td>
+                    <td><span class="badge badge-success">결제완료</span></td>
+                    <td><span class="badge badge-success">사용중</span></td>
+                    <td>2024-03-10</td>
+                    <td>2025-03-09</td>
+                    <td class="danger-text">D-113</td>
+                    <td>Y</td>
+
+                    <td>
+                        <div class="action-icons">
+                            <i class="fa-regular fa-eye"></i>
+                            <i class="fa-regular fa-pen-to-square"></i>
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </div>
+                    </td>
+                </tr>
+
+                </tbody>
+
+            </table>
+
+            <!-- PAGINATION -->
+            <div class="pagination">
+
+                <button class="page-btn">
+                    <i class="fa-solid fa-angle-left"></i>
+                </button>
+
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">4</button>
+                <button class="page-btn">5</button>
+
+                <button class="page-btn">
+                    <i class="fa-solid fa-angle-right"></i>
+                </button>
+
+                <div class="page-size">
+                    <select class="select-box" style="width:140px;">
+                        <option>10개씩 보기</option>
+                    </select>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- SUMMARY -->
+        <div class="summary-grid">
+
+            <div class="summary-card">
+                <div class="summary-title">전체 업체 수</div>
+
+                <div class="summary-value">
+                    128<span class="summary-unit">개</span>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-title">사용중 업체 수</div>
+
+                <div class="summary-value">
+                    96<span class="summary-unit">개</span>
+                </div>
+
+                <div class="summary-icon green">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-title">결제대기 업체 수</div>
+
+                <div class="summary-value">
+                    12<span class="summary-unit">개</span>
+                </div>
+
+                <div class="summary-icon orange">
+                    <i class="fa-regular fa-calendar"></i>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-title">정지 업체 수</div>
+
+                <div class="summary-value">
+                    8<span class="summary-unit">개</span>
+                </div>
+
+                <div class="summary-icon red">
+                    <i class="fa-regular fa-circle-xmark"></i>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-title">만료 임박 (D-30 이내)</div>
+
+                <div class="summary-value">
+                    5<span class="summary-unit">개</span>
+                </div>
+
+                <div class="summary-icon yellow">
+                    <i class="fa-regular fa-clock"></i>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-title">이번달 만료 예정</div>
+
+                <div class="summary-value">
+                    3<span class="summary-unit">개</span>
+                </div>
+
+                <div class="summary-icon purple">
+                    <i class="fa-regular fa-calendar"></i>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>상품별 기능정책</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Pretendard', sans-serif;
+        }
+
+        body{
+            background:#f5f7fb;
+            display:flex;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+        .sidebar{
+            width:260px;
+            height:100vh;
+            background:linear-gradient(180deg,#071325,#08192f,#06101e);
+            color:#fff;
+            position:fixed;
+            left:0;
+            top:0;
+            padding:20px 15px;
+            overflow-y:auto;
+        }
+
+        .logo{
+            font-size:28px;
+            font-weight:700;
+            margin-bottom:40px;
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .menu{
+            list-style:none;
+        }
+
+        .menu li{
+            margin-bottom:6px;
+        }
+
+        .menu a{
+            text-decoration:none;
+            color:#fff;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding:14px 14px;
+            border-radius:10px;
+            transition:0.2s;
+            font-size:15px;
+            font-weight:500;
+        }
+
+        .menu a:hover{
+            background:#0f2f57;
+        }
+
+        .menu a.active{
+            background:#2563eb;
+        }
+
+        .menu-left{
+            display:flex;
+            align-items:center;
+            gap:12px;
+        }
+
+        .submenu{
+            list-style:none;
+            margin-top:8px;
+            margin-left:10px;
+        }
+
+        .submenu li a{
+            padding:12px 16px;
+            background:#0a1830;
+            font-size:14px;
+        }
+
+        .submenu li a.active-sub{
+            background:#11284c;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+        .main{
+            margin-left:260px;
+            width:calc(100% - 260px);
+            min-height:100vh;
+        }
+
+        /* TOPBAR */
+        .topbar{
+            height:70px;
+            background:#fff;
+            border-bottom:1px solid #e5e7eb;
+            display:flex;
+            justify-content:flex-end;
+            align-items:center;
+            padding:0 30px;
+        }
+
+        .top-icons{
+            display:flex;
+            align-items:center;
+            gap:25px;
+            color:#4b5563;
+            font-size:18px;
+        }
+
+        .admin{
+            font-size:14px;
+            font-weight:600;
+        }
+
+        /* CONTENT */
+        .content{
+            padding:30px;
+        }
+
+        .page-badge{
+            background:#2563eb;
+            color:#fff;
+            display:inline-block;
+            padding:18px 40px;
+            border-radius:12px;
+            font-size:38px;
+            font-weight:800;
+            margin-bottom:35px;
+        }
+
+        .page-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-start;
+            margin-bottom:30px;
+        }
+
+        .page-title{
+            font-size:40px;
+            font-weight:800;
+            color:#111827;
+        }
+
+        .page-desc{
+            margin-top:10px;
+            color:#6b7280;
+            font-size:15px;
+        }
+
+        .breadcrumb{
+            color:#9ca3af;
+            font-size:14px;
+        }
+
+        /* CARD */
+        .card{
+            background:#fff;
+            border:1px solid #e5e7eb;
+            border-radius:14px;
+            overflow:hidden;
+        }
+
+        /* FILTER */
+        .filter-area{
+            padding:24px;
+            border-bottom:1px solid #edf0f5;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        .filter-wrap{
+            display:flex;
+            align-items:center;
+            gap:16px;
+        }
+
+        .filter-label{
+            font-size:15px;
+            font-weight:600;
+            color:#374151;
+        }
+
+        .select-box{
+            width:340px;
+            height:50px;
+            border:1px solid #d1d5db;
+            border-radius:8px;
+            padding:0 14px;
+            font-size:15px;
+            outline:none;
+        }
+
+        .save-btn{
+            background:#2563eb;
+            border:none;
+            color:#fff;
+            height:48px;
+            padding:0 30px;
+            border-radius:10px;
+            font-size:15px;
+            font-weight:700;
+            cursor:pointer;
+        }
+
+        /* TABLE */
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        thead{
+            background:#fafafa;
+        }
+
+        thead th{
+            padding:18px;
+            text-align:left;
+            border-bottom:1px solid #e5e7eb;
+            font-size:14px;
+            color:#374151;
+        }
+
+        tbody td{
+            padding:18px;
+            border-bottom:1px solid #f0f2f5;
+            font-size:15px;
+            color:#111827;
+        }
+
+        .center{
+            text-align:center;
+        }
+
+        /* TOGGLE */
+        .switch{
+            position:relative;
+            display:inline-block;
+            width:44px;
+            height:24px;
+        }
+
+        .switch input{
+            opacity:0;
+            width:0;
+            height:0;
+        }
+
+        .slider{
+            position:absolute;
+            cursor:pointer;
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+            background:#d1d5db;
+            transition:.3s;
+            border-radius:30px;
+        }
+
+        .slider:before{
+            position:absolute;
+            content:"";
+            width:18px;
+            height:18px;
+            left:3px;
+            top:3px;
+            background:#fff;
+            transition:.3s;
+            border-radius:50%;
+        }
+
+        .switch input:checked + .slider{
+            background:#2563eb;
+        }
+
+        .switch input:checked + .slider:before{
+            transform:translateX(20px);
+        }
+
+        /* INFO BOX */
+        .info-box{
+            margin:20px;
+            background:#eef4ff;
+            color:#4f74d9;
+            border-radius:10px;
+            padding:16px 20px;
+            font-size:14px;
+            display:flex;
+            align-items:center;
+            gap:10px;
+            font-weight:600;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- =========================
+     SIDEBAR
+========================= -->
+<div class="sidebar">
+
+    <div class="logo">
+        <i class="fa-solid fa-location-dot"></i>
+        플레이스 CRM
+    </div>
+
+    <ul class="menu">
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-solid fa-house"></i>
+                    대시보드
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-solid fa-chart-line"></i>
+                    순위체크
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-solid fa-handshake"></i>
+                    영업관리
+                </div>
+                <i class="fa-solid fa-angle-down"></i>
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-regular fa-clipboard"></i>
+                    공지관리
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-regular fa-user"></i>
+                    직원관리
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-regular fa-building"></i>
+                    업체관리
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="#" class="active">
+                <div class="menu-left">
+                    <i class="fa-solid fa-box"></i>
+                    상품관리
+                </div>
+                <i class="fa-solid fa-angle-down"></i>
+            </a>
+
+            <ul class="submenu">
+                <li><a href="#">상품목록</a></li>
+                <li><a href="#">상품별 메뉴권한</a></li>
+                <li><a href="#">상품별 크롤링 제한</a></li>
+                <li><a href="#" class="active-sub">상품별 기능정책</a></li>
+                <li><a href="#">상품별 할당량</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-solid fa-robot"></i>
+                    크롤링관리
+                </div>
+                <i class="fa-solid fa-angle-down"></i>
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-solid fa-file-lines"></i>
+                    로그관리
+                </div>
+                <i class="fa-solid fa-angle-down"></i>
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <div class="menu-left">
+                    <i class="fa-solid fa-gear"></i>
+                    설정관리
+                </div>
+                <i class="fa-solid fa-angle-down"></i>
+            </a>
+        </li>
+
+    </ul>
+
+</div>
+
+<!-- =========================
+     MAIN
+========================= -->
+<div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+
+        <div class="top-icons">
+            <i class="fa-regular fa-bell"></i>
+            <i class="fa-regular fa-user"></i>
+
+            <div class="admin">
+                관리자
+                <i class="fa-solid fa-angle-down"></i>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <div class="page-badge">
+            4. 상품별 기능정책
+        </div>
+
+        <div class="page-header">
+
+            <div>
+                <div class="page-title">
+                    상품별 기능정책
+                </div>
+
+                <div class="page-desc">
+                    상품별 제공 기능 및 사용 여부를 설정합니다.
+                </div>
+            </div>
+
+            <div class="breadcrumb">
+                홈 / 상품관리 / 상품별 기능정책
+            </div>
+
+        </div>
+
+        <!-- CARD -->
+        <div class="card">
+
+            <!-- FILTER -->
+            <div class="filter-area">
+
+                <div class="filter-wrap">
+
+                    <div class="filter-label">
+                        상품 선택
+                    </div>
+
+                    <select class="select-box">
+                        <option>STANDARD (Standard)</option>
+                        <option>PREMIUM (Premium)</option>
+                    </select>
+
+                </div>
+
+                <button class="save-btn">
+                    저장
+                </button>
+
+            </div>
+
+            <!-- TABLE -->
+            <table>
+
+                <thead>
+                <tr>
+                    <th width="18%">기능 코드</th>
+                    <th width="20%">기능명</th>
+                    <th width="35%">기능 설명</th>
+                    <th class="center">STANDARD</th>
+                    <th class="center">PREMIUM</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr>
+                    <td><b>BATCH_RANK</b></td>
+                    <td>기본 순위 조회 배치</td>
+                    <td>일정 주기로 순위 조회 배치 실행</td>
+
+                    <td class="center">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+
+                    <td class="center">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><b>REALTIME_RANK</b></td>
+                    <td>실시간 순위 조회</td>
+                    <td>실시간으로 순위 조회 기능 제공</td>
+
+                    <td class="center">
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+
+                    <td class="center">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><b>KEYWORD_TRACKING</b></td>
+                    <td>키워드 트래킹</td>
+                    <td>키워드 순위 추적 및 이력 관리</td>
+
+                    <td class="center">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+
+                    <td class="center">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><b>ALERT</b></td>
+                    <td>알림 기능</td>
+                    <td>순위 변동 알림 제공</td>
+
+                    <td class="center">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+
+                    <td class="center">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><b>REPORT</b></td>
+                    <td>리포트</td>
+                    <td>기간별 리포트 생성 및 다운로드</td>
+
+                    <td class="center">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+
+                    <td class="center">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><b>API_ACCESS</b></td>
+                    <td>API 접근</td>
+                    <td>외부 API 호출 및 데이터 제공</td>
+
+                    <td class="center">
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+
+                    <td class="center">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><b>CRM</b></td>
+                    <td>CRM 기능</td>
+                    <td>고객/영업 관리 기능</td>
+
+                    <td class="center">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+
+                    <td class="center">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><b>AI_ANALYSIS</b></td>
+                    <td>AI 분석</td>
+                    <td>AI 기반 분석 및 인사이트 제공</td>
+
+                    <td class="center">
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+
+                    <td class="center">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                </tr>
+
+                </tbody>
+
+            </table>
+
+            <!-- INFO -->
+            <div class="info-box">
+                <i class="fa-solid fa-circle-info"></i>
+                기능 정책은 즉시 적용되며, 사용자 권한에 영향을 줄 수 있습니다.
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
